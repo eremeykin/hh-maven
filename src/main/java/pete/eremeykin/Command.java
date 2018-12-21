@@ -26,8 +26,8 @@ final class Command {
     String[] asStringArray() {
         String[] resultArray = new String[arguments.size() + 1];
         resultArray[0] = command;
-        for (int i = 1; i < arguments.size(); i++) {
-            resultArray[i] = arguments.get(i).toString();
+        for (int i = 1; i < resultArray.length; i++) {
+            resultArray[i] = arguments.get(i-1).toString();
         }
         return resultArray;
     }
