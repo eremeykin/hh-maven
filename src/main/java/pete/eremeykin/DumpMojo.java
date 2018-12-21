@@ -11,56 +11,65 @@ import org.apache.maven.plugins.annotations.Parameter;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.StringWriter;
 
 /**
- * Goal which dumps mysql data base
+ * Goal which makes a dump of mysql database
  */
 @Mojo(name = "dump", defaultPhase = LifecyclePhase.PROCESS_SOURCES)
 public class DumpMojo extends AbstractMojo {
 
-    private static final String UTF8 = "UTF-8";
-    private static final String MSG_EXIT_CODE = "mysqldump command exited with code: ";
+    private static final String ENC_UTF8 = "UTF-8";
+    private static final String MSG_EXIT_CODE = "command exited with code: ";
 
     private static final String CMD_DUMP = "mysqldump";
     private static final String ARG_QUOTE_NAMES = "-Q";
     private static final String ARG_COMPLETE_INSERT = "-c";
     private static final String ARG_EXTENDED_INSERT = "-e";
+    private static final String ARG_SINGLE_TRANSACTION = "--single-transaction";
     private static final String ARG_USER = "--user";
     private static final String ARG_PASSWORD = "--password";
-    private static final String ARG_SINGLE_TRANSACTION = "--single-transaction";
+    private static final String ARG_HOST = "--host";
+    private static final String ARG_PORT = "--port";
 
-    @Parameter(defaultValue = "true", property = "quoteNames")
+    @Parameter(defaultValue = CMD_DUMP)
+    private String exec;
+
+    @Parameter(defaultValue = "true")
     private boolean quoteNames;
 
-    @Parameter(defaultValue = "true", property = "completeInsert")
+    @Parameter(defaultValue = "true")
     private boolean completeInsert;
 
-    @Parameter(defaultValue = "true", property = "extendedInsert")
+    @Parameter(defaultValue = "true")
     private boolean extendedInsert;
 
-
-    @Parameter(property = "userName", required = true)
-    private String userName;
-
-    @Parameter(property = "password", required = true)
-    private String password;
-
-    @Parameter(property = "dbName", required = true)
-    private String dbName;
-
-    @Parameter(defaultValue = "true", property = "singleTransaction")
+    @Parameter(defaultValue = "true")
     private boolean singleTransaction;
 
-    @Parameter(defaultValue = "mysqldump", property = "mySqlDump")
+    @Parameter(defaultValue = "root", required = true)
+    private String userName;
+
+    @Parameter(defaultValue = "mysql", required = true)
+    private String password;
+
+    @Parameter(defaultValue = "localhost", required = true)
+    private String host;
+
+    @Parameter(defaultValue = "3306", required = true)
+    private String port;
+
+    @Parameter(defaultValue = "database", required = true)
+    private String dbName;
+
+    @Parameter(defaultValue = "dump.sql", property = "mySqlDump")
     private File outputFile;
 
-    @Parameter(defaultValue = "${project.build.directory}", readonly = true ,required = true)
+    @Parameter(defaultValue = "${project.basedir}", readonly = true, required = false)
     private File baseDir;
 
 
     public void execute() throws MojoExecutionException {
-        Command.Builder commandBuilder = new Command.Builder(CMD_DUMP);
+        Command.Builder commandBuilder = new Command.Builder(exec);
 
         if (quoteNames) {
             commandBuilder.addArgument(ARG_QUOTE_NAMES);
@@ -77,30 +86,30 @@ public class DumpMojo extends AbstractMojo {
 
         commandBuilder.addArgument(ARG_USER, userName)
                 .addArgument(ARG_PASSWORD, password)
+                .addArgument(ARG_HOST, host)
+                .addArgument(ARG_PORT, port)
                 .addArgument(dbName);
 
         Command dumpCommand = commandBuilder.build();
 
+        getLog().info("Run command: " + dumpCommand.toString());
         ProcessBuilder pb = new ProcessBuilder(dumpCommand.asStringArray());
         pb.directory(baseDir);
 
         pb.redirectOutput(ProcessBuilder.Redirect.to(outputFile));
 
-
         try {
             Process p = pb.start();
             int exitCode = p.waitFor();
             if (exitCode != 0) {
-                StringWriter errorWriter = new StringWriter();
-                IOUtils.copy(p.getInputStream(), errorWriter, UTF8);
-                String errorMessage = MSG_EXIT_CODE + exitCode;
-                getLog().error(errorWriter.toString());
+                String error = IOUtils.toString(p.getErrorStream(), ENC_UTF8);
+                String errorMessage = exec + " " + MSG_EXIT_CODE + exitCode;
                 getLog().error(errorMessage);
-                throw new MojoExecutionException(errorMessage);
+                throw new MojoExecutionException(errorMessage + "\n" + error);
             }
-            getLog().info("Dump created successfully");
+            getLog().info("Dump created successfully: " + outputFile.getAbsolutePath());
         } catch (IOException | InterruptedException e) {
-            throw new MojoExecutionException("An exception occurred during running the mysqldump command", e);
+            throw new MojoExecutionException("An exception occurred during running the mysqldump.sh command", e);
         }
     }
 }
