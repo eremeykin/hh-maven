@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 echo "-- THIS DUMP IS JUST EMULATION"
+echo "-- You need mysqldump be installed to run this plugin"
 
 if [[ $* == *-Q* ]]
     then
