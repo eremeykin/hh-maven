@@ -2,15 +2,13 @@ package pete.eremeykin;
 
 
 import org.apache.maven.plugin.testing.MojoRule;
-import org.apache.maven.plugin.testing.WithoutMojo;
-
 import org.junit.Rule;
 
 import static java.util.Arrays.asList;
-import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.endsWith;
 import static org.hamcrest.Matchers.hasEntry;
 import static org.junit.Assert.*;
+import static pete.eremeykin.Dictionary.*;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,6 +21,7 @@ import java.util.Map;
 
 @RunWith(Parameterized.class)
 public class ConfigTest {
+
     @Rule
     public MojoRule rule = new MojoRule();
 
@@ -34,20 +33,20 @@ public class ConfigTest {
         File defaultConfig = new File("target/test-classes/default-config-project/");
 
         Map<String, Object> defaultFieldsValues = new HashMap<>();
-        defaultFieldsValues.put("exec", "mysqldump");
-        defaultFieldsValues.put("quoteNames", true);
-        defaultFieldsValues.put("completeInsert", true);
-        defaultFieldsValues.put("extendedInsert", true);
-        defaultFieldsValues.put("singleTransaction", true);
-        defaultFieldsValues.put("userName", "root");
-        defaultFieldsValues.put("dbName", "database");
-        defaultFieldsValues.put("password", "mysql");
-        defaultFieldsValues.put("host", "localhost");
-        defaultFieldsValues.put("port", 3306);
+        defaultFieldsValues.put(PARAM_EXEC, "mysqldump");
+        defaultFieldsValues.put(PARAM_QUOTE_NAMES, true);
+        defaultFieldsValues.put(PARAM_COMPLETE_INSERT, true);
+        defaultFieldsValues.put(PARAM_EXTEND_INSERT, true);
+        defaultFieldsValues.put(PARAM_SINGLE_TRANSACTION, true);
+        defaultFieldsValues.put(PARAM_USER_NAME, "root");
+        defaultFieldsValues.put(PARAM_DB_NAME, "database");
+        defaultFieldsValues.put(PARAM_PASSWORD, "mysql");
+        defaultFieldsValues.put(PARAM_HOST, "localhost");
+        defaultFieldsValues.put(PARAM_PORT, 3306);
 
         Map<String, String> defaultFilePaths = new HashMap<>();
-        defaultFilePaths.put("outputFile", "/dump.sql");
-        defaultFilePaths.put("baseDir", "target/test-classes/default-config-project");
+        defaultFilePaths.put(PARAM_OUTPUT_FILE, "/dump.sql");
+        defaultFilePaths.put(PARAM_BASE_DIR, "target/test-classes/default-config-project");
 
         ///////////////////Custom Config/////////////////////////////////////
 
@@ -55,20 +54,20 @@ public class ConfigTest {
 
         Map<String, Object> customFieldsValues = new HashMap<>();
 
-        customFieldsValues.put("quoteNames", false);
-        customFieldsValues.put("completeInsert", false);
-        customFieldsValues.put("extendedInsert", false);
-        customFieldsValues.put("singleTransaction", false);
-        customFieldsValues.put("userName", "admin");
-        customFieldsValues.put("dbName", "company");
-        customFieldsValues.put("password", "test123");
-        customFieldsValues.put("host", "mycompany.com");
-        customFieldsValues.put("port", 3137);
+        customFieldsValues.put(PARAM_QUOTE_NAMES, false);
+        customFieldsValues.put(PARAM_COMPLETE_INSERT, false);
+        customFieldsValues.put(PARAM_EXTEND_INSERT, false);
+        customFieldsValues.put(PARAM_SINGLE_TRANSACTION, false);
+        customFieldsValues.put(PARAM_USER_NAME, "admin");
+        customFieldsValues.put(PARAM_DB_NAME, "company");
+        customFieldsValues.put(PARAM_PASSWORD, "test123");
+        customFieldsValues.put(PARAM_HOST, "mycompany.com");
+        customFieldsValues.put(PARAM_PORT, 3137);
 
         Map<String, String> customFilePaths = new HashMap<>();
-        customFilePaths.put("outputFile", "/company.dump");
-        customFilePaths.put("baseDir", "/bin");
-        customFilePaths.put("exec", "/mycommand.sh");
+        customFilePaths.put(PARAM_OUTPUT_FILE, "/company.dump");
+        customFilePaths.put(PARAM_BASE_DIR, "/bin");
+        customFilePaths.put(PARAM_EXEC, "cmd/mysqldump.sh");
 
         return asList(new Object[][]{{defaultConfig, defaultFieldsValues, defaultFilePaths},
                 {customConfig, customFieldsValues, customFilePaths}});
@@ -88,8 +87,7 @@ public class ConfigTest {
     public void testConfig() throws Exception {
         assertNotNull(config);
         assertTrue(config.exists());
-
-        DumpMojo dumpMojo = (DumpMojo) rule.lookupConfiguredMojo(config, "dump");
+        DumpMojo dumpMojo = (DumpMojo) rule.lookupConfiguredMojo(config, GOAL_DUMP);
         assertNotNull(dumpMojo);
         Map<String, Object> actualFields = rule.getVariablesAndValuesFromObject(DumpMojo.class, dumpMojo);
 
@@ -110,23 +108,6 @@ public class ConfigTest {
             }
             assertThat(actualFilePath, endsWith(expectedValue));
         }
-
-
-//        dumpMojo.execute();
-//
-//        File outputDirectory = (File) rule.getVariableValueFromObject(dumpMojo, "outputDirectory");
-//        assertNotNull(outputDirectory);
-//        assertTrue(outputDirectory.exists());
-//
-//        File touch = new File(outputDirectory, "touch.txt");
-//        assertTrue(touch.exists());
-
     }
-
-//    @WithoutMojo
-//    @Test
-//    public void testSomethingWhichDoesNotNeedTheMojoAndProbablyShouldBeExtractedIntoANewClassOfItsOwn() {
-//        assertTrue(true);
-//    }
 }
 

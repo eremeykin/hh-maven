@@ -28,7 +28,7 @@
                     <host>mycompany.com</host>
                     <port>3137</port>
                     <singleTransaction>false</singleTransaction>
-                    <exec>${project.basedir}/mycommand.sh</exec>
+                    <exec>${project.basedir}/cmd/mysqldump.sh</exec>
                 </configuration>
             </plugin>
         </plugins>

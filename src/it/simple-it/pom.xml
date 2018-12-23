@@ -30,6 +30,7 @@
                 </executions>
                 <configuration>
                     <!--comment next line if you have mysqldump installed -->
+                    <quoteNames>false</quoteNames>
                     <exec>${project.basedir}/mysqldump.sh</exec>
                 </configuration>
             </plugin>
