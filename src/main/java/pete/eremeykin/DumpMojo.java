@@ -13,7 +13,9 @@ import java.io.File;
 import java.io.IOException;
 
 /**
- * Goal which makes a dump of mysql database
+ * Создает дапм базы данных MySql. Для работы необходимо установленная утилита
+ * mysqldump. Для тестирования она заменена мок скриптом mysqldump.sh, который имитирует
+ * работу mysqldump.
  */
 @Mojo(name = "dump", defaultPhase = LifecyclePhase.PROCESS_SOURCES)
 public class DumpMojo extends AbstractMojo {
@@ -31,39 +33,114 @@ public class DumpMojo extends AbstractMojo {
     private static final String ARG_HOST = "--host";
     private static final String ARG_PORT = "--port";
 
+
+    /**
+     * Команда для исполнения mysqldump. Через этот параметр
+     * можно подменить выполнение настоящей mysqldump скриптом mysqldump.sh, который имитирует
+     * работу mysqldump.
+     *
+     * @parameter
+     */
     @Parameter(defaultValue = CMD_DUMP)
     private String exec;
 
+
+    /**
+     * Экранировать названия таблиц и столбцов, например, `tablename`.`colname`
+     *
+     * @parameter
+     */
     @Parameter(defaultValue = "true")
     private boolean quoteNames;
 
+
+    /**
+     * Использовать полные выражения вставки.
+     *
+     * @parameter
+     */
     @Parameter(defaultValue = "true")
     private boolean completeInsert;
 
+
+    /**
+     * Использовать синтексис INSERT, который позволяет включать
+     * несколько списков значений.
+     *
+     * @parameter
+     */
     @Parameter(defaultValue = "true")
     private boolean extendedInsert;
 
+
+    /**
+     * В одной транзакции, только для InnoDB.
+     *
+     * @parameter
+     */
     @Parameter(defaultValue = "true")
     private boolean singleTransaction;
 
+
+    /**
+     * Имя пользователя для подключения к серверу СУБД
+     *
+     * @parameter
+     */
     @Parameter(defaultValue = "root", required = true)
     private String userName;
 
+
+    /**
+     * Пароль для подключения к серверу СУБД
+     *
+     * @parmeter
+     */
     @Parameter(defaultValue = "mysql", required = true)
     private String password;
 
+
+    /**
+     * Хост сервера СУБД
+     *
+     * @parameter
+     */
     @Parameter(defaultValue = "localhost", required = true)
     private String host;
 
+
+    /**
+     * Порт сервера СУБД
+     *
+     * @parameter
+     */
     @Parameter(defaultValue = "3306", required = true)
     private int port;
 
+
+    /**
+     * Название базы данных
+     *
+     * @parameter
+     */
     @Parameter(defaultValue = "database", required = true)
     private String dbName;
 
+
+    /**
+     * Файл в который запишется дамп
+     *
+     * @parameter
+     */
     @Parameter(defaultValue = "dump.sql", property = "mySqlDump")
     private File outputFile;
 
+
+    /**
+     *
+     * Каталог, из которого будет выполняться exec команда
+     * @parameter
+     */
     @Parameter(defaultValue = "${project.basedir}", readonly = true, required = false)
     private File baseDir;
 
