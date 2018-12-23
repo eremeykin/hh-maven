@@ -56,7 +56,7 @@ public class DumpMojo extends AbstractMojo {
     private String host;
 
     @Parameter(defaultValue = "3306", required = true)
-    private String port;
+    private int port;
 
     @Parameter(defaultValue = "database", required = true)
     private String dbName;
@@ -87,7 +87,7 @@ public class DumpMojo extends AbstractMojo {
         commandBuilder.addArgument(ARG_USER, userName)
                 .addArgument(ARG_PASSWORD, password)
                 .addArgument(ARG_HOST, host)
-                .addArgument(ARG_PORT, port)
+                .addArgument(ARG_PORT, String.valueOf(port))
                 .addArgument(dbName);
 
         Command dumpCommand = commandBuilder.build();
