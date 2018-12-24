@@ -39,21 +39,21 @@ public class DumpMojo extends AbstractMojo {
      * можно подменить выполнение настоящей mysqldump скриптом mysqldump.sh, который имитирует
      * работу mysqldump.
      */
-    @Parameter(defaultValue = CMD_DUMP)
+    @Parameter(defaultValue = CMD_DUMP, property = "exec")
     private String exec;
 
 
     /**
      * Экранировать названия таблиц и столбцов, например, `tablename`.`colname`
      */
-    @Parameter(defaultValue = "true")
+    @Parameter(defaultValue = "true", property = "quoteNames")
     private boolean quoteNames;
 
 
     /**
      * Использовать полные выражения вставки.
      */
-    @Parameter(defaultValue = "true")
+    @Parameter(defaultValue = "true", property = "completeInsert")
     private boolean completeInsert;
 
 
@@ -61,63 +61,63 @@ public class DumpMojo extends AbstractMojo {
      * Использовать синтексис INSERT, который позволяет включать
      * несколько списков значений.
      */
-    @Parameter(defaultValue = "true")
+    @Parameter(defaultValue = "true", property = "extendedInsert")
     private boolean extendedInsert;
 
 
     /**
      * В одной транзакции, только для InnoDB.
      */
-    @Parameter(defaultValue = "true")
+    @Parameter(defaultValue = "true", property = "singleTransaction")
     private boolean singleTransaction;
 
 
     /**
      * Имя пользователя для подключения к серверу СУБД
      */
-    @Parameter(defaultValue = "root", required = true)
+    @Parameter(defaultValue = "root", required = true, property = "userName")
     private String userName;
 
 
     /**
      * Пароль для подключения к серверу СУБД
      */
-    @Parameter(defaultValue = "mysql", required = true)
+    @Parameter(defaultValue = "mysql", required = true, property = "password")
     private String password;
 
 
     /**
      * Хост сервера СУБД
      */
-    @Parameter(defaultValue = "localhost", required = true)
+    @Parameter(defaultValue = "localhost", required = true, property = "host")
     private String host;
 
 
     /**
      * Порт сервера СУБД
      */
-    @Parameter(defaultValue = "3306", required = true)
+    @Parameter(defaultValue = "3306", required = true, property = "port")
     private int port;
 
 
     /**
      * Название базы данных
      */
-    @Parameter(defaultValue = "database", required = true)
+    @Parameter(defaultValue = "database", required = true, property = "dbName")
     private String dbName;
 
 
     /**
      * Файл в который запишется дамп
      */
-    @Parameter(defaultValue = "dump.sql", property = "mySqlDump")
+    @Parameter(defaultValue = "dump.sql", property = "outputFile")
     private File outputFile;
 
 
     /**
      * Каталог, из которого будет выполняться exec команда
      */
-    @Parameter(defaultValue = "${project.basedir}", readonly = true, required = false)
+    @Parameter(defaultValue = "${project.basedir}", readonly = true, property = "baseDir")
     private File baseDir;
 
 
