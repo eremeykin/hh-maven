@@ -38,8 +38,6 @@ public class DumpMojo extends AbstractMojo {
      * Команда для исполнения mysqldump. Через этот параметр
      * можно подменить выполнение настоящей mysqldump скриптом mysqldump.sh, который имитирует
      * работу mysqldump.
-     *
-     * @parameter
      */
     @Parameter(defaultValue = CMD_DUMP)
     private String exec;
@@ -47,8 +45,6 @@ public class DumpMojo extends AbstractMojo {
 
     /**
      * Экранировать названия таблиц и столбцов, например, `tablename`.`colname`
-     *
-     * @parameter
      */
     @Parameter(defaultValue = "true")
     private boolean quoteNames;
@@ -56,8 +52,6 @@ public class DumpMojo extends AbstractMojo {
 
     /**
      * Использовать полные выражения вставки.
-     *
-     * @parameter
      */
     @Parameter(defaultValue = "true")
     private boolean completeInsert;
@@ -66,8 +60,6 @@ public class DumpMojo extends AbstractMojo {
     /**
      * Использовать синтексис INSERT, который позволяет включать
      * несколько списков значений.
-     *
-     * @parameter
      */
     @Parameter(defaultValue = "true")
     private boolean extendedInsert;
@@ -75,8 +67,6 @@ public class DumpMojo extends AbstractMojo {
 
     /**
      * В одной транзакции, только для InnoDB.
-     *
-     * @parameter
      */
     @Parameter(defaultValue = "true")
     private boolean singleTransaction;
@@ -84,8 +74,6 @@ public class DumpMojo extends AbstractMojo {
 
     /**
      * Имя пользователя для подключения к серверу СУБД
-     *
-     * @parameter
      */
     @Parameter(defaultValue = "root", required = true)
     private String userName;
@@ -93,8 +81,6 @@ public class DumpMojo extends AbstractMojo {
 
     /**
      * Пароль для подключения к серверу СУБД
-     *
-     * @parmeter
      */
     @Parameter(defaultValue = "mysql", required = true)
     private String password;
@@ -102,8 +88,6 @@ public class DumpMojo extends AbstractMojo {
 
     /**
      * Хост сервера СУБД
-     *
-     * @parameter
      */
     @Parameter(defaultValue = "localhost", required = true)
     private String host;
@@ -111,8 +95,6 @@ public class DumpMojo extends AbstractMojo {
 
     /**
      * Порт сервера СУБД
-     *
-     * @parameter
      */
     @Parameter(defaultValue = "3306", required = true)
     private int port;
@@ -120,8 +102,6 @@ public class DumpMojo extends AbstractMojo {
 
     /**
      * Название базы данных
-     *
-     * @parameter
      */
     @Parameter(defaultValue = "database", required = true)
     private String dbName;
@@ -129,17 +109,13 @@ public class DumpMojo extends AbstractMojo {
 
     /**
      * Файл в который запишется дамп
-     *
-     * @parameter
      */
     @Parameter(defaultValue = "dump.sql", property = "mySqlDump")
     private File outputFile;
 
 
     /**
-     *
      * Каталог, из которого будет выполняться exec команда
-     * @parameter
      */
     @Parameter(defaultValue = "${project.basedir}", readonly = true, required = false)
     private File baseDir;
