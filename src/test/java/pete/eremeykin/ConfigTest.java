@@ -66,7 +66,7 @@ public class ConfigTest {
 
         Map<String, String> customFilePaths = new HashMap<>();
         customFilePaths.put(PARAM_OUTPUT_FILE, "/company.dump");
-        customFilePaths.put(PARAM_BASE_DIR, "/bin");
+        customFilePaths.put(PARAM_BASE_DIR, "/tmp");
         customFilePaths.put(PARAM_EXEC, "cmd/mysqldump.sh");
 
         return asList(new Object[][]{{defaultConfig, defaultFieldsValues, defaultFilePaths},

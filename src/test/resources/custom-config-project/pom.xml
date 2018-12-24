@@ -21,7 +21,7 @@
                     <password>test123</password>
                     <dbName>company</dbName>
                     <userName>admin</userName>
-                    <baseDir>/bin/</baseDir>
+                    <baseDir>/tmp</baseDir>
                     <completeInsert>false</completeInsert>
                     <extendedInsert>false</extendedInsert>
                     <quoteNames>false</quoteNames>
